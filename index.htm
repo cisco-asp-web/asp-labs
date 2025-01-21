@@ -31,7 +31,7 @@
                     <th>Service Provider Topologies</th>  
                 </tr>
                 <tr>
-                    <td></td>
+                    <td><a href="https://github.com/cisco-asp-web/asp-labs/blob/main/labs/bgp/basic/basic-8k.clab.yml" target="_blank"><img class="logoLink" src="img/ico/cisco.ico" /> BGP basic Lab</a></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -41,7 +41,28 @@
             </table>
         <br></br>
         <br></br>
-
+        <script>
+            fetch('/labs')
+                .then(response => response.json())
+                .then(data => {
+                    const table = document.querySelector('.tabLinks');
+                    data.forEach(lab => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${lab.name}</td>
+                            <td><button onclick="launchLab('${lab.path}')">Launch</button></td>
+                        `;
+                        table.appendChild(row);
+                    });
+                });
+    
+            function launchLab(path) {
+                fetch(`/launch?path=${encodeURIComponent(path)}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => alert(data.message))
+                    .catch(err => alert('Error launching lab: ' + err));
+            }
+        </script>
 	</body>
 </html>
 
