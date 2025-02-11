@@ -1,14 +1,18 @@
-# Use the official NGINX base image
-FROM nginx
+# Base image
+FROM python:3.9-slim
 
-# Copy the static content to the container
-COPY css /usr/share/nginx/html/css
-COPY img /usr/share/nginx/html/img
-COPY index.htm /usr/share/nginx/html/
+# Install dependencies
+RUN apt-get update && apt-get install -y sudo containerlab nginx
 
+# Copy app
+COPY . /app
+WORKDIR /app
 
-# Expose the default HTTP port
-EXPOSE 80
+# Install Python dependencies
+RUN pip install flask
 
-# Start NGINX when the container starts
-CMD ["nginx", "-g", "daemon off;"]
+# Expose port
+EXPOSE 8080
+
+# Command to run both Nginx and Flask
+CMD service nginx start && python app.py
